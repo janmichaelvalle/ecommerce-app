@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   Row,
@@ -9,10 +9,11 @@ import {
   Button,
   ListGroupItem,
 } from "react-bootstrap";
-import products from "../products";
+import axios from 'axios';
 import Rating from "../components/Rating";
 
 const ProductScreen = () => {
+  const [product, setProduct] = useState({})
   const { id: productId } = useParams();
   /* Explanation of products.find((p) => p._id === productId)
   1) products.find: This method searches through the products array and returns the first element that satisfies the provided testing function.
@@ -25,7 +26,16 @@ const ProductScreen = () => {
 
   4) If a matching product is found, it will be stored in the product variable. Otherwise, product will be undefined 
    */
-  const product = products.find((p) => p._id === productId);
+  // const product = products.find((p) => p._id === productId);
+
+  useEffect(() => {
+    const fetchProduct = async() => {
+      const { data } = await axios.get(`/api/products/${productId}`);
+      setProduct( data );
+    };
+    fetchProduct();
+
+  }, [productId])
 
   return (
     <>
